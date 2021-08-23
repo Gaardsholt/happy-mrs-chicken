@@ -6,7 +6,7 @@ class Stuff {
   }
 }
 
-let game = {
+var game = {
   canvas: document.getElementById("canvas"),
   ctx: {},
   speed: 5,
@@ -18,30 +18,33 @@ let game = {
     src: "kylling_1"
   }),
   points: 0,
-  Start: function() {
-    game.ctx = game.canvas.getContext("2d");
-    game.canvas.width = window.innerWidth;
-    game.canvas.height = window.innerHeight;
+  Start: function () {
+    this.ctx = this.canvas.getContext("2d");
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
 
-    // this.player.x = this.canvas.width
+    var playerImg = document.getElementById(this.player.src);
+    this.player.x = Math.max(0, Math.floor(Math.random() * (this.canvas.width - playerImg.width)) - playerImg.width);
+    this.player.y = Math.max(0, Math.floor(Math.random() * (this.canvas.height - playerImg.height)) - playerImg.height);
 
-    game.addEventListener();
-    game.loop();
+
+    this.addEventListener();
+    this.loop();
   },
-  loop: function() {
+  loop: function () {
     game.walk();
     game.draw();
 
     window.requestAnimationFrame(game.loop);
   },
-  space: function() {
-    var playerImg = document.getElementById(game.player.src);
+  space: function () {
+    var playerImg = document.getElementById(this.player.src);
     var eggImg = document.getElementById("egg");
 
-    var x = game.player.x + (eggImg.width/2);
-    var y = game.player.y + (playerImg.height - (eggImg.height/2));
+    var x = this.player.x + (eggImg.width / 2);
+    var y = this.player.y + (playerImg.height - (eggImg.height / 2));
 
-    setTimeout(function() {
+    setTimeout(function () {
       game.stuffOnCanvas.push(new Stuff({
         x: x,
         y: y,
@@ -50,92 +53,90 @@ let game = {
       game.points++;
     }, 200);
   },
-  addEventListener: function() {
+  addEventListener: function () {
     window.addEventListener("keydown", function (e) {
-      if (e.keyCode === 32) {
+      if (e.code === "Space") {
         game.space();
         e.preventDefault();
       }
-      if ([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-        game.keys[e.keyCode] = true;
+      if (["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
+        game.keys[e.code] = true;
         e.preventDefault();
       }
     });
     window.addEventListener("keyup", function (e) {
-      delete game.keys[e.keyCode];
+      delete game.keys[e.code];
     });
 
 
     // Touch stuff
-    canvas.addEventListener("mouseup", function (e) {
+    this.canvas.addEventListener("mouseup", function (e) {
       var image = document.getElementById(game.player.src);
-      
-      pos = game.getMousePos(canvas, e);
-      game.player.x = pos.x - (image.width/2);
-      game.player.y = pos.y - (image.height/2);
+
+      pos = game.getMousePos(game.canvas, e);
+      game.player.x = pos.x - (image.width / 2);
+      game.player.y = pos.y - (image.height / 2);
       game.space();
     }, false);
-    canvas.addEventListener("touchend", function (e) {
+    this.canvas.addEventListener("touchend", function (e) {
       var mouseEvent = new MouseEvent("mouseup", {});
-      canvas.dispatchEvent(mouseEvent);
+      game.canvas.dispatchEvent(mouseEvent);
     }, false);
   },
-  getMousePos: function(canvasDom, mouseEvent) {
+  getMousePos: function (canvasDom, mouseEvent) {
     var rect = canvasDom.getBoundingClientRect();
     return {
       x: mouseEvent.clientX - rect.left,
       y: mouseEvent.clientY - rect.top
     };
   },
-  walk: function() {
-    if (37 in game.keys) {
-      game.player.x -= game.speed;
+  walk: function () {
+    if ("ArrowLeft" in this.keys) {
+      this.player.x -= this.speed;
     }
-    if (39 in game.keys) {
-      game.player.x += game.speed;
+    if ("ArrowRight" in this.keys) {
+      this.player.x += this.speed;
     }
-    if (38 in game.keys) {
-      game.player.y -= game.speed;
+    if ("ArrowUp" in this.keys) {
+      this.player.y -= this.speed;
     }
-    if (40 in game.keys) {
-      game.player.y += game.speed;
+    if ("ArrowDown" in this.keys) {
+      this.player.y += this.speed;
     }
   },
-  drawImage: function(img) {
+  drawImage: function (img) {
     var image = document.getElementById(img.src);
-    game.ctx.drawImage(image, img.x, img.y);
+    this.ctx.drawImage(image, img.x, img.y);
   },
-  drawStuff: function() {
-    game.stuffOnCanvas.forEach(stuff => {
-      game.drawImage(stuff);
+  drawStuff: function () {
+    this.stuffOnCanvas.forEach(stuff => {
+      this.drawImage(stuff);
     });
   },
-  drawPlayer: function() {
-    game.drawImage(game.player);
+  drawPlayer: function () {
+    this.drawImage(this.player);
   },
-  draw: function() {
-    game.ctx.fillStyle = "#77dcff";
-    game.ctx.fillRect(0, 0, canvas.width, canvas.height);
-  
-    game.updateScore();
-    game.drawStuff();
-    game.drawPlayer(); 
+  draw: function () {
+    this.ctx.fillStyle = "#77dcff";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.updateScore();
+    this.drawStuff();
+    this.drawPlayer();
   },
-  updateScore: function() {
+  updateScore: function () {
+    this.ctx.font = "60px Arial";
+    this.ctx.fillStyle = "white";
+
+    var width = this.ctx.measureText(this.getPointsFormatted()).width;
+    var height = parseInt(this.ctx.font.substring(0, 2));
 
 
-    game.ctx.font = "30px Arial";
-    game.ctx.fillStyle = "white";
-
-    var width = game.ctx.measureText(game.getPointsFormatted()).width;
-    var height = parseInt(game.ctx.font.substring(0, 2)); 
-
-    
-    game.ctx.fillText(game.getPointsFormatted(), canvas.width - width - 10, height);
+    this.ctx.fillText(this.getPointsFormatted(), this.canvas.width - width - 10, height);
   },
-  getPointsFormatted: function() {
-    var num = game.points;
-  
-    return `${"0".repeat(Math.max(0, 3-num.toString().length))}${num}`
+  getPointsFormatted: function () {
+    var num = this.points;
+
+    return `${"0".repeat(Math.max(0, 3 - num.toString().length))}${num}`
   }
 }
