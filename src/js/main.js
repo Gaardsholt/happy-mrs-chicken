@@ -38,11 +38,11 @@ var game = {
     window.requestAnimationFrame(game.loop);
   },
   space: function () {
-    var playerImg = document.getElementById(this.player.src);
-    var eggImg = document.getElementById("egg");
+    let playerImg = document.getElementById(this.player.src);
+    let eggImg = document.getElementById("egg");
 
-    var x = this.player.x + (eggImg.width / 2);
-    var y = this.player.y + (playerImg.height - (eggImg.height / 2));
+    let x = this.player.x + (eggImg.width / 2);
+    let y = this.player.y + (playerImg.height - (eggImg.height / 2));
 
     setTimeout(function () {
       game.stuffOnCanvas.push(new Stuff({
@@ -71,7 +71,7 @@ var game = {
 
     // Touch stuff
     this.canvas.addEventListener("mouseup", function (e) {
-      var image = document.getElementById(game.player.src);
+      let image = document.getElementById(game.player.src);
 
       pos = game.getMousePos(game.canvas, e);
       game.player.x = pos.x - (image.width / 2);
@@ -79,12 +79,12 @@ var game = {
       game.space();
     }, false);
     this.canvas.addEventListener("touchend", function (e) {
-      var mouseEvent = new MouseEvent("mouseup", {});
+      let mouseEvent = new MouseEvent("mouseup", {});
       game.canvas.dispatchEvent(mouseEvent);
     }, false);
   },
   getMousePos: function (canvasDom, mouseEvent) {
-    var rect = canvasDom.getBoundingClientRect();
+    let rect = canvasDom.getBoundingClientRect();
     return {
       x: mouseEvent.clientX - rect.left,
       y: mouseEvent.clientY - rect.top
@@ -105,7 +105,7 @@ var game = {
     }
   },
   drawImage: function (img) {
-    var image = document.getElementById(img.src);
+    let image = document.getElementById(img.src);
     this.ctx.drawImage(image, img.x, img.y);
   },
   drawStuff: function () {
@@ -128,14 +128,14 @@ var game = {
     this.ctx.font = "60px Arial";
     this.ctx.fillStyle = "white";
 
-    var width = this.ctx.measureText(this.getPointsFormatted()).width;
-    var height = parseInt(this.ctx.font.substring(0, 2));
+    let width = this.ctx.measureText(this.getPointsFormatted()).width;
+    let height = parseInt(this.ctx.font.substring(0, 2));
 
 
     this.ctx.fillText(this.getPointsFormatted(), this.canvas.width - width - 10, height);
   },
   getPointsFormatted: function () {
-    var num = this.points;
+    let num = this.points;
 
     return `${"0".repeat(Math.max(0, 3 - num.toString().length))}${num}`
   }
