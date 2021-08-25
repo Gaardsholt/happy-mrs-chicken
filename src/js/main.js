@@ -79,6 +79,7 @@ var game = {
       game.space();
     }, false);
     this.canvas.addEventListener("touchend", function (e) {
+      e.preventDefault();
       let mouseEvent = new MouseEvent("mouseup", {});
       game.canvas.dispatchEvent(mouseEvent);
     }, false);
