@@ -18,6 +18,7 @@ var game = {
     src: "kylling_1"
   }),
   points: 0,
+  music: new Audio('sounds/theme_song.mp3'),
   Start: function () {
     this.ctx = this.canvas.getContext("2d");
     this.canvas.width = window.innerWidth;
@@ -28,6 +29,7 @@ var game = {
     this.player.y = Math.max(0, Math.floor(Math.random() * (this.canvas.height - playerImg.height)) - playerImg.height);
 
 
+
     this.addEventListener();
     this.loop();
   },
@@ -36,6 +38,15 @@ var game = {
     game.draw();
 
     window.requestAnimationFrame(game.loop);
+  },
+  toggleMusic: function () {
+    this.music.volume = 0.2;
+
+    if (this.music.paused) {
+      this.music.play();
+    } else {
+      this.music.pause();
+    }
   },
   space: function () {
     let playerImg = document.getElementById(this.player.src);
@@ -51,9 +62,16 @@ var game = {
         src: "egg"
       }));
       game.points++;
+      var audio = new Audio('sounds/fart.mp3');
+      audio.play();
     }, 200);
   },
   addEventListener: function () {
+    var musicControl = document.getElementById("music_control");
+    musicControl.addEventListener("click", function (e) {
+      game.toggleMusic();
+    });
+
     window.addEventListener("keydown", function (e) {
       if (e.code === "Space") {
         game.space();
