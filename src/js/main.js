@@ -78,11 +78,6 @@ var game = {
       game.player.y = pos.y - (image.height / 2);
       game.space();
     }, false);
-    this.canvas.addEventListener("touchend", function (e) {
-      e.preventDefault();
-      let mouseEvent = new MouseEvent("mouseup", {});
-      game.canvas.dispatchEvent(mouseEvent);
-    }, false);
   },
   getMousePos: function (canvasDom, mouseEvent) {
     let rect = canvasDom.getBoundingClientRect();
