@@ -70,7 +70,7 @@ var game = {
 
 
     // Touch stuff
-    this.canvas.addEventListener("mouseup", function (e) {
+    this.canvas.addEventListener("click", function (e) {
       let image = document.getElementById(game.player.src);
 
       pos = game.getMousePos(game.canvas, e);
