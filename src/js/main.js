@@ -40,7 +40,8 @@ var game = {
     window.requestAnimationFrame(game.loop);
   },
   toggleMusic: function () {
-    this.music.volume = 0.2;
+    this.music.loop = true;
+    this.music.volume = 0.1;
 
     if (this.music.paused) {
       this.music.play();
